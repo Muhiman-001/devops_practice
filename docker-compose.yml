@@ -1,0 +1,38 @@
+services:
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=mydatabase
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - app-network
+
+  api:
+    build: .
+    container_name: node-api
+    environment:
+      - MONGODB_URI=mongodb://admin:password@mongodb:27017/mydatabase?authSource=admin
+      - PORT=3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    volumes:
+      - ./src:/usr/src/app/src
+    networks:
+      - app-network
+    command: node src/index.js
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
