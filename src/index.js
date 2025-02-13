@@ -24,7 +24,7 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello, World!' });
+  res.json({ message: 'Hello, World!!S' });
 });
 
 app.get('/api/newtwo', (req, res) => {
